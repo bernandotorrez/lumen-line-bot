@@ -9,7 +9,7 @@ class CarModelType extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'tbl_car_model_type';
+    protected $table = 'tbl_model_type';
     protected $primaryKey = 'id_model_type';
     protected $guarded = ['id_model_type'];
 

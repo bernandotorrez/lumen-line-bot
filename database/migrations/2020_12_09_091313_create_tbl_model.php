@@ -28,25 +28,25 @@ class CreateTblModel extends Migration
 
     private function insertData()
     {
-        // CarModel::create([
-        //     'nama_model' => '718'
-        // ]);
+        CarModel::create([
+            'nama_model' => '718'
+        ]);
 
-        // CarModel::create([
-        //     'nama_model' => '911'
-        // ]);
+        CarModel::create([
+            'nama_model' => '911'
+        ]);
 
-        // CarModel::create([
-        //     'nama_model' => 'Panamera'
-        // ]);
+        CarModel::create([
+            'nama_model' => 'Panamera'
+        ]);
 
-        // CarModel::create([
-        //     'nama_model' => 'Macan'
-        // ]);
+        CarModel::create([
+            'nama_model' => 'Macan'
+        ]);
 
-        // CarModel::create([
-        //     'nama_model' => 'Cayenne'
-        // ]);
+        CarModel::create([
+            'nama_model' => 'Cayenne'
+        ]);
     }
 
     /**

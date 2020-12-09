@@ -9,12 +9,12 @@ class CarModel extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'tbl_car_model';
+    protected $table = 'tbl_model';
     protected $primaryKey = 'id_model';
     protected $guarded = ['id_model'];
 
-    public function types()
-    {
-        return $this->hasMany(CarModelType::class, 'id_model');
-    }
+    // public function types()
+    // {
+    //     return $this->hasMany(CarModelType::class, 'id_model');
+    // }
 }

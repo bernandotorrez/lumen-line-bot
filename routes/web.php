@@ -20,3 +20,8 @@ $router->get('/', function () use ($router) {
 $router->get('/key', function() {
     return \Illuminate\Support\Str::random(32);
 });
+
+$router->group(['prefix' => 'car-model'], function() use($router) {
+    $router->get('/', ['uses' => 'CarModelController@index']);
+    $router->post('/add', ['uses' => 'CarModelController@add']);
+});

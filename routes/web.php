@@ -24,4 +24,5 @@ $router->get('/key', function() {
 $router->get('/car-model', ['uses' => 'CarModelController@index']);
 $router->post('/add', ['uses' => 'CarModelController@add']);
 
-$router->post('/webhook', ['uses' => 'WebhookController@handleEvents']);
+//$router->post('/webhook', ['uses' => 'WebhookController@handleEvents']);
+$router->post('/webhook', 'WebhookController');

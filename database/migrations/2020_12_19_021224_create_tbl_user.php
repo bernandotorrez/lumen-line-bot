@@ -13,14 +13,13 @@ class CreateTblUser extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('tbl_user')) {
-            Schema::create('tbl_user', function (Blueprint $table) {
-                $table->id('id_user');
+        if (!Schema::hasTable('tbl_line_user')) {
+            Schema::create('tbl_line_user', function (Blueprint $table) {
+                $table->id('id_line_user');
                 $table->string('user_id', 100);
                 $table->string('display_name', 100);
-                $table->string('line_id', 50);
-                $table->integer('number');
                 $table->timestamps();
+                $table->softDeletes();
             });
         }
         
@@ -33,6 +32,6 @@ class CreateTblUser extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tbl_user');
+        Schema::dropIfExists('tbl_line_user');
     }
 }

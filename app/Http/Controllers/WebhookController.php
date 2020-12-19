@@ -16,7 +16,7 @@ use LINE\LINEBot\MessageBuilder\TemplateMessageBuilder;
 use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
 use LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder;
 use App\Repository\Eloquent\EventLogRepository;
-use App\Repository\Eloquent\UserRepository;
+use App\Repository\Eloquent\LineUserRepository;
 
 class WebhookController extends Controller
 {
@@ -26,20 +26,20 @@ class WebhookController extends Controller
     private $logger;
     private $user;
     private $eventLogRepository;
-    private $userRepository;
+    private $lineUserRepository;
 
     public function __construct(
         Request $request,
         Response $response,
         Logger $logger,
         EventLogRepository $eventLogRepository,
-        UserRepository $userRepository
+        LineUserRepository $lineUserRepository
     ) {
         $this->request = $request;
         $this->response = $response;
         $this->logger = $logger;
         $this->eventLogRepository = $eventLogRepository;
-        $this->userRepository = $userRepository;
+        $this->lineUserRepository = $lineUserRepository;
  
         // create bot object
         $httpClient = new CurlHTTPClient(getenv('CHANNEL_ACCESS_TOKEN'));
@@ -72,19 +72,20 @@ class WebhookController extends Controller
                 if(! isset($event['source']['userId'])) continue;
      
                 // get user data from database
-                $this->user = $this->userRepository->getUser($event['source']['userId']);
+                $this->user = $this->lineUserRepository->getUser($event['source']['userId']);
      
                 // if user not registered
                 if(!$this->user) $this->followCallback($event);
                 else {
                     // respond event
                     if($event['type'] == 'message'){
-                        $this->textMessage($event);
+                        if(method_exists($this, $event['message']['type'].'Message')){
+                            $this->{$event['message']['type'].'Message'}($event);
+                        }
                     } else {
-                        // if(method_exists($this, $event['type'].'Callback')){
-                        //     $this->{$event['type'].'Callback'}($event);
-                        // }
-                        $this->followCallback($event);
+                        if(method_exists($this, $event['type'].'Callback')){
+                            $this->{$event['type'].'Callback'}($event);
+                        }
                     }
                 }
             }
@@ -120,7 +121,7 @@ class WebhookController extends Controller
             $this->bot->replyMessage($event['replyToken'], $multiMessageBuilder);
      
             // save user data
-            $this->userRepository->saveUser(
+            $this->lineUserRepository->saveUser(
                 $profile['userId'],
                 $profile['displayName']
             );
@@ -131,14 +132,22 @@ class WebhookController extends Controller
     private function textMessage($event)
     {
         $userMessage = $event['message']['text'];
-        
-        if(strtolower($userMessage) == 'mulai')
+        if(true)
         {
-            $message = 'Silakan kirim pesan "MULAI" untuk memulai kuis.';
-            $textMessageBuilder = new TextMessageBuilder($message);
-            $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
+            if(strtolower($userMessage) == 'mulai')
+            {
+                $message = 'A';
+                $textMessageBuilder = new TextMessageBuilder($message);
+                $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
+            } else {
+                $message = 'no keyword found';
+                $textMessageBuilder = new TextMessageBuilder($message);
+                $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
+            }
+     
+            // if user already begin test
         } else {
-            $message = 'no keyword found';
+            $message = 'user kosong';
             $textMessageBuilder = new TextMessageBuilder($message);
             $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
         }
@@ -150,7 +159,7 @@ class WebhookController extends Controller
         $stickerMessageBuilder = new StickerMessageBuilder(1, 106);
      
         // create text message
-        $message = 'Silakan kirim pesan "MULAI" untuk memulai kuis.';
+        $message = 'sticker';
         $textMessageBuilder = new TextMessageBuilder($message);
      
         // merge all message

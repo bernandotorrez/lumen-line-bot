@@ -21,7 +21,4 @@ $router->get('/key', function() {
     return \Illuminate\Support\Str::random(32);
 });
 
-$router->get('/car-model', ['uses' => 'CarModelController@index']);
-$router->post('/add', ['uses' => 'CarModelController@add']);
-
 $router->post('/webhook', 'WebhookController');

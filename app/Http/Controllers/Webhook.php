@@ -18,7 +18,7 @@ use LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder;
 use App\Repository\Eloquent\EventLogRepository;
 use App\Repository\Eloquent\UserRepository;
 
-class WebhookController extends Controller
+class Webhook extends Controller
 {
     /**
      * @var LINEBot
@@ -159,6 +159,10 @@ class WebhookController extends Controller
         if(strtolower($userMessage) == 'mulai')
         {
             $message = 'Silakan kirim pesan "MULAI" untuk memulai kuis.';
+            $textMessageBuilder = new TextMessageBuilder($message);
+            $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
+        } else {
+            $message = 'no keyword found';
             $textMessageBuilder = new TextMessageBuilder($message);
             $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
         }

@@ -8,9 +8,9 @@ class EventLogRepository
 {
     public function saveLog(string $signature, string $body)
     {
-        EventLog::create([
+        return EventLog::create([
             'signature' => $signature,
-            'events' => $body
+            'event' => $body
         ]);
     }
 

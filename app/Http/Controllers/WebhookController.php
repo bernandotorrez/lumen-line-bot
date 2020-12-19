@@ -18,37 +18,14 @@ use LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder;
 use App\Repository\Eloquent\EventLogRepository;
 use App\Repository\Eloquent\UserRepository;
 
-class Webhook extends Controller
+class WebhookController extends Controller
 {
-    /**
-     * @var LINEBot
-     */
     private $bot;
-    /**
-     * @var Request
-     */
     private $request;
-    /**
-     * @var Response
-     */
     private $response;
-    /**
-     * @var Logger
-     */
     private $logger;
-    /**
-     * @var array
-     */
     private $user;
-
-    /**
-     * @var EventLogRepository
-     */
     private $eventLogRepository;
-
-    /**
-     * @var userRepository
-     */
     private $userRepository;
 
     public function __construct(
@@ -79,7 +56,7 @@ class Webhook extends Controller
      
         // save log
         $signature = $this->request->server('HTTP_X_LINE_SIGNATURE') ?: '-';
-        //$this->eventLogRepository->saveLog($signature, json_encode($body, true));
+        $this->eventLogRepository->saveLog($signature, json_encode($body, true));
 
         return $this->handleEvents();
     }

@@ -79,7 +79,7 @@ class Webhook extends Controller
      
         // save log
         $signature = $this->request->server('HTTP_X_LINE_SIGNATURE') ?: '-';
-        $this->eventLogRepository->saveLog($signature, json_encode($body, true));
+        //$this->eventLogRepository->saveLog($signature, json_encode($body, true));
 
         return $this->handleEvents();
     }
@@ -102,13 +102,12 @@ class Webhook extends Controller
                 else {
                     // respond event
                     if($event['type'] == 'message'){
-                        if(method_exists($this, $event['message']['type'].'Message')){
-                            $this->{$event['message']['type'].'Message'}($event);
-                        }
+                        $this->textMessage($event);
                     } else {
-                        if(method_exists($this, $event['type'].'Callback')){
-                            $this->{$event['type'].'Callback'}($event);
-                        }
+                        // if(method_exists($this, $event['type'].'Callback')){
+                        //     $this->{$event['type'].'Callback'}($event);
+                        // }
+                        $this->followCallback($event);
                     }
                 }
             }

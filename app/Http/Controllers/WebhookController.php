@@ -79,7 +79,7 @@ class WebhookController extends Controller
      
         // save log
         $signature = $this->request->server('HTTP_X_LINE_SIGNATURE') ?: '-';
-        $this->logGateway->saveLog($signature, json_encode($body, true));
+        $this->eventLogRepository->saveLog($signature, json_encode($body, true));
 
         return $this->handleEvents();
     }
@@ -150,5 +150,35 @@ class WebhookController extends Controller
             );
      
         }
+    }
+
+    private function textMessage($event)
+    {
+        $userMessage = $event['message']['text'];
+        
+        if(strtolower($userMessage) == 'mulai')
+        {
+            $message = 'Silakan kirim pesan "MULAI" untuk memulai kuis.';
+            $textMessageBuilder = new TextMessageBuilder($message);
+            $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
+        }
+    }
+
+    private function stickerMessage($event)
+    {
+        // create sticker message
+        $stickerMessageBuilder = new StickerMessageBuilder(1, 106);
+     
+        // create text message
+        $message = 'Silakan kirim pesan "MULAI" untuk memulai kuis.';
+        $textMessageBuilder = new TextMessageBuilder($message);
+     
+        // merge all message
+        $multiMessageBuilder = new MultiMessageBuilder();
+        $multiMessageBuilder->add($stickerMessageBuilder);
+        $multiMessageBuilder->add($textMessageBuilder);
+     
+        // send message
+        $this->bot->replyMessage($event['replyToken'], $multiMessageBuilder);
     }
 }

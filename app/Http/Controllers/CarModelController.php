@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\CarModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class CarModelController extends Controller
 {
     public function index()
     {
-        $data = CarModel::all();
+        $data = Cache::remember('car-model', 30, function () {
+            return CarModel::all();
+        });
+
         $count = count($data);
 
         if($count == 0) {

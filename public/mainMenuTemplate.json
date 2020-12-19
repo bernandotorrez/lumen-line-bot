@@ -1,73 +1,75 @@
 {
   "type": "bubble",
+  "direction": "ltr",
   "header": {
     "type": "box",
     "layout": "vertical",
+    "backgroundColor": "#C9162BFF",
+    "borderColor": "#C9162BFF",
     "contents": [
       {
         "type": "text",
-        "text": "Dicoding Academy",
-        "weight": "bold"
+        "text": "Menu",
+        "weight": "bold",
+        "size": "lg",
+        "color": "#FFFFFF",
+        "flex": 1,
+        "align": "center",
+        "margin": "sm",
+        "style": "normal",
+        "contents": []
       }
     ]
-  },
-  "hero": {
-    "type": "image",
-    "url": "https://www.dicoding.com/images/small/academy/menjadi_android_developer_expert_logo_041217105708.png",
-    "size": "full",
-    "aspectRatio": "4:3",
-    "aspectMode": "cover"
   },
   "body": {
     "type": "box",
-    "layout": "vertical",
-    "contents": [
-      {
-        "type": "text",
-        "text": "Menjadi Android Developer Expert",
-        "size": "sm",
-        "color": "#c9302c",
-        "weight": "bold"
-      },
-      {
-        "type": "text",
-        "text": "oleh: Dicoding Indonesia",
-        "size": "sm",
-        "color": "#c9302c"
-      },
-      {
-        "type": "text",
-        "text": "Jadilah expert di dunia pemrograman Android. Materi disusun oleh Dicoding sebagai Google Authorized Training Partner.",
-        "size": "sm",
-        "wrap": true,
-        "margin": "lg"
-      }
-    ]
-  },
-  "footer": {
-    "type": "box",
     "layout": "horizontal",
-    "spacing": "sm",
+    "flex": 2,
+    "spacing": "md",
+    "margin": "md",
+    "backgroundColor": "#C9162BFF",
+    "borderColor": "#FFFFFFFF",
     "contents": [
       {
-        "type": "button",
-        "style": "secondary",
+        "type": "text",
+        "text": "Dealer",
+        "weight": "bold",
+        "color": "#FFFFFFFF",
+        "flex": 1,
+        "align": "center",
+        "gravity": "center",
+        "margin": "xs",
+        "wrap": true,
         "action": {
-          "type": "postback",
-          "label": "Trial",
-          "displayText": "Trial",
-          "data": "Trial"
-        }
+          "type": "message",
+          "label": "Dealer",
+          "text": "dealer"
+        },
+        "style": "normal",
+        "contents": []
       },
       {
-        "type": "button",
-        "style": "primary",
+        "type": "separator",
+        "margin": "md",
+        "color": "#FFFFFFFF"
+      },
+      {
+        "type": "text",
+        "text": "Car Model",
+        "weight": "bold",
+        "color": "#FFFFFFFF",
+        "flex": 1,
+        "align": "center",
+        "gravity": "center",
+        "margin": "xs",
+        "wrap": true,
         "action": {
-          "type": "postback",
-          "label": "Daftar",
-          "displayText": "Daftar",
-          "data": "Daftar"
-        }
+          "type": "message",
+          "label": "Car Model",
+          "text": "car-model"
+        },
+        "style": "normal",
+        "contents": []
       }
     ]
   }

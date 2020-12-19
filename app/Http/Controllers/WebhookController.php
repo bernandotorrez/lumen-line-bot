@@ -17,6 +17,11 @@ use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
 use LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder;
 use App\Repository\Eloquent\EventLogRepository;
 use App\Repository\Eloquent\LineUserRepository;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Storage;
+use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder;
+use LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder;
 
 class WebhookController extends Controller
 {
@@ -27,6 +32,7 @@ class WebhookController extends Controller
     private $user;
     private $eventLogRepository;
     private $lineUserRepository;
+    private $httpClient;
 
     public function __construct(
         Request $request,
@@ -40,10 +46,8 @@ class WebhookController extends Controller
         $this->logger = $logger;
         $this->eventLogRepository = $eventLogRepository;
         $this->lineUserRepository = $lineUserRepository;
- 
-        // create bot object
-        $httpClient = new CurlHTTPClient(getenv('CHANNEL_ACCESS_TOKEN'));
-        $this->bot  = new LINEBot($httpClient, ['channelSecret' => getenv('CHANNEL_SECRET')]);
+        $this->httpClient = new CurlHTTPClient(getenv('CHANNEL_ACCESS_TOKEN'));
+        $this->bot  = new LINEBot($this->httpClient, ['channelSecret' => getenv('CHANNEL_SECRET')]);
     }
 
     public function __invoke()
@@ -83,8 +87,8 @@ class WebhookController extends Controller
                             $this->{$event['message']['type'].'Message'}($event);
                         }
                     } else {
-                        if(method_exists($this, $event['type'].'Callback')){
-                            $this->{$event['type'].'Callback'}($event);
+                        if(method_exists($this, $event['message']['type'].'Callback')){
+                            $this->{$event['message']['type'].'Callback'}($event);
                         }
                     }
                 }
@@ -105,20 +109,18 @@ class WebhookController extends Controller
             $profile = $res->getJSONDecodedBody();
      
             // create welcome message
-            $message  = "Salam kenal, " . $profile['displayName'] . "!\n";
-            $message .= "Silakan kirim pesan \"MULAI\" untuk memulai kuis Tebak Kode.";
+            $message  = "Hi, " . $profile['displayName'] . "!\n";
+            $message .= "Perkenalkan namaku Poru!, disini aku akan membantu kamu seputar : Dealer, Model Mobil, dan Type Model Mobil Porsche!";
             $textMessageBuilder = new TextMessageBuilder($message);
-     
-            // create sticker message
-            $stickerMessageBuilder = new StickerMessageBuilder(1, 3);
      
             // merge all message
             $multiMessageBuilder = new MultiMessageBuilder();
             $multiMessageBuilder->add($textMessageBuilder);
-            $multiMessageBuilder->add($stickerMessageBuilder);
      
             // send reply message
             $this->bot->replyMessage($event['replyToken'], $multiMessageBuilder);
+            $this->mainMenuTemplate($event['replyToken']);
+            $this->dealerTemplate($event['replyToken']);
      
             // save user data
             $this->lineUserRepository->saveUser(
@@ -131,27 +133,16 @@ class WebhookController extends Controller
 
     private function textMessage($event)
     {
-        $userMessage = $event['message']['text'];
-        if(true)
-        {
-            if(strtolower($userMessage) == 'menu') {
-                $textMessageBuilder = new TextMessageBuilder('tes');
-                $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
-            } 
-            else if(strtolower($userMessage) == 'mulai')
-            {
-                $message = 'A';
-                $textMessageBuilder = new TextMessageBuilder($message);
-                $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
-            } else {
-                $message = 'no keyword found';
-                $textMessageBuilder = new TextMessageBuilder($message);
-                $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
-            }
-     
-            // if user already begin test
+        $userMessage = strtolower($event['message']['text']);
+
+        if($userMessage == 'menu') {
+            $this->mainMenuTemplate($event['replyToken']);
+        } else if($userMessage == 'dealer') {
+            $this->dealerTemplate($event['replyToken']);
+        } else if($userMessage == 'car-model') {
+            $this->carModelTemplate($event['replyToken']);
         } else {
-            $message = 'user kosong';
+            $message = 'no keyword found';
             $textMessageBuilder = new TextMessageBuilder($message);
             $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
         }
@@ -175,8 +166,71 @@ class WebhookController extends Controller
         $this->bot->replyMessage($event['replyToken'], $multiMessageBuilder);
     }
 
-    private function mainMenuTemplate()
+    private function mainMenuTemplate($replyToken)
     {
-        return $template = file_get_contents(__DIR__.'/public/mainMenTemplate.json');
+        $template = file_get_contents(base_path().'/public/mainMenuTemplate.json');
+        $result = $this->httpClient->post(LINEBot::DEFAULT_ENDPOINT_BASE . '/v2/bot/message/reply', [
+            'replyToken' => $replyToken,
+            'messages'   => [
+                [
+                    'type'     => 'flex',
+                    'altText'  => 'Main Menu',
+                    'contents' => json_decode($template)
+                ]
+            ],
+        ]);
+        return $result;
+    }
+
+    public function dealerTemplate($replyToken)
+    {
+        $template = file_get_contents(base_path().'/public/dealerTemplate.json');
+        $result = $this->httpClient->post(LINEBot::DEFAULT_ENDPOINT_BASE . '/v2/bot/message/reply', [
+            'replyToken' => $replyToken,
+            'messages'   => [
+                [
+                    'type'     => 'flex',
+                    'altText'  => 'Porsche Dealer',
+                    'contents' => json_decode($template)
+                ]
+            ],
+        ]);
+        return $result;
+    }
+
+    public function carModelTemplate($replyToken)
+    {
+
+        $carModel = CarModel::all();
+
+        $arrayModel = [
+            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
+                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
+            ]),
+            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
+                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
+            ]),
+            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
+                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
+            ]),
+            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
+                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
+            ]),
+            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
+                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
+            ]),
+        ];
+
+        foreach($carModel as $model) {
+            array_push($arrayModel, new CarouselColumnTemplateBuilder($model->nama_model, '', $model->img_url,[
+                new UriTemplateActionBuilder('See More', $model->img_url),
+            ]));
+        }
+
+        $carouselTemplateBuilder = new CarouselTemplateBuilder($arrayModel);
+
+        $textMessageBuilder = new TemplateMessageBuilder('Car-Model', $carouselTemplateBuilder);
+
+        return $this->bot->replyMessage($replyToken, $textMessageBuilder);
     }
 }

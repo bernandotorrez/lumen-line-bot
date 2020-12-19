@@ -1,0 +1,111 @@
+{
+    "type": "bubble",
+    "hero": {
+      "type": "image",
+      "url": "https://files.porsche.com/filestore/image/pap/none/importers-porschecentrejakarta-xle/normal/6b89bf67-663c-11e7-9717-0019999cd470/porsche-normal.jpg",
+      "size": "full",
+      "aspectRatio": "20:13",
+      "aspectMode": "cover",
+      "action": {
+        "type": "uri",
+        "label": "Line",
+        "uri": "https://linecorp.com/"
+      }
+    },
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "text",
+          "text": "Porsche Centre Jakarta",
+          "weight": "bold",
+          "size": "xl",
+          "contents": []
+        },
+        {
+          "type": "box",
+          "layout": "vertical",
+          "spacing": "sm",
+          "margin": "lg",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "sm",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "Place",
+                  "size": "sm",
+                  "color": "#AAAAAA",
+                  "flex": 1,
+                  "contents": []
+                },
+                {
+                  "type": "text",
+                  "text": "Jl. Sultan Iskandar Muda Arteri Pondok Indah No.51, RT.6/RW.3, Kby. Lama Utara, Kec. Kby. Lama, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12240",
+                  "size": "sm",
+                  "color": "#1577A8FF",
+                  "flex": 5,
+                  "wrap": true,
+                  "action": {
+                    "type": "uri",
+                    "label": "Maps",
+                    "uri": "https://www.google.com/maps/place/Porsche+Centre+Jakarta/@-6.2413142,106.7823439,15z/data=!4m2!3m1!1s0x0:0x70eda3fd36063a8c?sa=X&ved=2ahUKEwiYz_WowNrtAhWRf30KHc0WCdkQ_BIwE3oECB0QBQ"
+                  },
+                  "contents": []
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "sm",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "Time",
+                  "size": "sm",
+                  "color": "#AAAAAA",
+                  "flex": 1,
+                  "contents": []
+                },
+                {
+                  "type": "text",
+                  "text": "08:00 - 17:00",
+                  "size": "sm",
+                  "color": "#666666",
+                  "flex": 5,
+                  "wrap": true,
+                  "contents": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "box",
+      "layout": "vertical",
+      "flex": 0,
+      "spacing": "sm",
+      "contents": [
+        {
+          "type": "button",
+          "action": {
+            "type": "uri",
+            "label": "WEBSITE",
+            "uri": "https://www.porsche.com/pap/_indonesia_/aboutporsche/importers/dealer/jakarta/"
+          },
+          "height": "sm",
+          "style": "link"
+        },
+        {
+          "type": "spacer",
+          "size": "sm"
+        }
+      ]
+    }
+  }

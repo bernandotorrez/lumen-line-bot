@@ -134,7 +134,11 @@ class WebhookController extends Controller
         $userMessage = $event['message']['text'];
         if(true)
         {
-            if(strtolower($userMessage) == 'mulai')
+            if(strtolower($userMessage) == 'menu') {
+                $textMessageBuilder = new TextMessageBuilder('tes');
+                $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
+            } 
+            else if(strtolower($userMessage) == 'mulai')
             {
                 $message = 'A';
                 $textMessageBuilder = new TextMessageBuilder($message);
@@ -169,5 +173,10 @@ class WebhookController extends Controller
      
         // send message
         $this->bot->replyMessage($event['replyToken'], $multiMessageBuilder);
+    }
+
+    private function mainMenuTemplate()
+    {
+        return $template = file_get_contents(__DIR__.'/public/mainMenTemplate.json');
     }
 }

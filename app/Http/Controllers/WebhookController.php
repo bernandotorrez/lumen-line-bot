@@ -19,6 +19,7 @@ use App\Repository\Eloquent\EventLogRepository;
 use App\Repository\Eloquent\LineUserRepository;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
+use LINE\LINEBot\MessageBuilder\RawMessageBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder;
 use LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder;
@@ -113,16 +114,16 @@ class WebhookController extends Controller
             $message  = "Hi, " . $profile['displayName'] . "!\n";
             $message .= "Perkenalkan namaku Poru!, Disini aku akan membantu kamu seputar : Dealer, Model Mobil, dan Type Model Mobil Porsche!";
             $textMessageBuilder = new TextMessageBuilder($message);
-            // $menuMessageBuilder = new TextMessageBuilder([
-            //     'type'     => 'flex',
-            //     'altText'  => 'Main Menu',
-            //     'contents' => json_decode(file_get_contents(base_path().'/public/mainMenuTemplate.json'))
-            // ]);
+            $menuMessageBuilder = new RawMessageBuilder([
+                'type'     => 'flex',
+                'altText'  => 'Main Menu',
+                'contents' => json_decode(file_get_contents(base_path().'/public/mainMenuTemplate.json'))
+            ]);
      
             // merge all message
             $multiMessageBuilder = new MultiMessageBuilder();
             $multiMessageBuilder->add($textMessageBuilder);
-           // $multiMessageBuilder->add($menuMessageBuilder);
+           $multiMessageBuilder->add($menuMessageBuilder);
      
             // send reply message
             $this->bot->replyMessage($event['replyToken'], $multiMessageBuilder);

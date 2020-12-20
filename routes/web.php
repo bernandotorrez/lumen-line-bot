@@ -2,6 +2,8 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use App\Models\CarModel;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -19,6 +21,67 @@ $router->get('/', function () use ($router) {
 
 $router->get('/key', function() {
     return \Illuminate\Support\Str::random(32);
+});
+
+$router->get('/car-model', function() {
+    $carModel = CarModel::all();
+
+    $contents = array();
+
+    foreach($carModel as $model) {
+        $content = array(
+            'type' => 'bubble',
+            'hero' => array(
+                'type' => 'image',
+                'url' => $model->img_url,
+                'size' => 'full',
+                'aspectRatio' => '20:13',
+                'aspectMode' => 'cover',
+                'action' => array(
+                    'type' => 'uri',
+                    'label' => $model->nama_model,
+                    'uri' => $model->nama_model
+                )
+            ),
+            'body' => array(
+                'type' => 'box',
+                'layout' => 'vertical',
+                'content' => array(
+                    0 => array(
+                        'type' => 'text',
+                        'text' => $model->nama_model,
+                        'weight' => 'bold',
+                        'size' => 'xl',
+                        'content' => [],
+                    )
+                )
+            ),
+            'footer' => array(
+                'type' => 'box',
+                'layout' => 'vertical',
+                'flex' => 0,
+                'spacing' => 'sm',
+                'content' => array(
+                    0 => array(
+                        'type' => 'button',
+                        'action' => array(
+                            'type' => 'message',
+                            'label' => 'See Type Model',
+                            'text' => $model->nama_model
+                        ),
+                        'height' => 'sm',
+                        'style' => 'link'
+                    ),
+                    'type' => 'spacer',
+                    'size' => 'sm'
+                )
+            )
+        );
+
+        array_push($contents, $content);
+    }
+
+    echo json_encode($contents);
 });
 
 $router->post('/webhook', 'WebhookController');

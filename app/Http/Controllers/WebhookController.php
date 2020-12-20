@@ -234,8 +234,8 @@ class WebhookController extends Controller
                                 'type' => 'button',
                                 'action' => (object) array(
                                     'type' => 'message',
-                                    'label' => 'see more',
-                                    'text' => 'see more'
+                                    'label' => 'See '.$model->nama_model.' Types',
+                                    'text' => 'car-type-'.$model->nama_model
                                 ),
                                 'height' => 'sm',
                                 'style' => 'link',

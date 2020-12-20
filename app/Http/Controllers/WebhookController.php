@@ -196,64 +196,73 @@ class WebhookController extends Controller
         $carModel = CarModel::all();
 
         $contents = array();
-
+        
         foreach($carModel as $model) {
-            $content = array(
-                'type' => 'bubble',
-                'hero' => array(
-                    'type' => 'image',
-                    'url' => $model->img_url,
-                    'size' => 'full',
-                    'aspectRatio' => '20:13',
-                    'aspectMode' => 'cover',
-                    'action' => array(
-                        'type' => 'uri',
-                        'label' => $model->nama_model,
-                        'uri' => $model->nama_model
-                    )
-                ),
-                'body' => array(
-                    'type' => 'box',
-                    'layout' => 'vertical',
-                    'content' => array(
-                        0 => array(
-                            'type' => 'text',
-                            'text' => $model->nama_model,
-                            'weight' => 'bold',
-                            'size' => 'xl',
-                            'content' => [],
+            $x = array(
+                0 => (object) array(
+                    'type' => 'bubble',
+                    'hero' => (object) array(
+                        'type' => 'image',
+                        'url' => $model->nama_model,
+                        'size' => 'full',
+                        'aspectRatio' => '20:13',
+                        'aspectMode' => 'cover',
+                        'action' => (object) array(
+                            'type' => 'message',
+                            'label' => $model->nama_model,
+                            'text' => $model->nama_model
                         )
-                    )
-                ),
-                'footer' => array(
-                    'type' => 'box',
-                    'layout' => 'vertical',
-                    'flex' => 0,
-                    'spacing' => 'sm',
-                    'content' => array(
-                        0 => array(
-                            'type' => 'button',
-                            'action' => array(
-                                'type' => 'message',
-                                'label' => 'See Type Model',
-                                'text' => $model->nama_model
+                    ),
+                    'body' => (object) array(
+                        'type' => 'box',
+                        'layout' => 'vertical',
+                        'contents' => array(
+                            0 => (object) array(
+                                'type' => 'text',
+                                'text' => $model->nama_model,
+                                'weight' => 'bold',
+                                'size' => 'xl',
+                                'contents' => array()
+                            )
+                        )
+                    ),
+                    'footer' => (object) array(
+                        'type' => 'box',
+                        'layout' => 'vertical',
+                        'flex' => 0,
+                        'spacing' => 'sm',
+                        'contents' => array(
+                            0 => (object) array(
+                                'type' => 'button',
+                                'action' => (object) array(
+                                    'type' => 'message',
+                                    'label' => 'see more',
+                                    'text' => 'see more'
+                                ),
+                                'height' => 'sm',
+                                'style' => 'link',
                             ),
-                            'height' => 'sm',
-                            'style' => 'link'
-                        ),
-                        'type' => 'spacer',
-                        'size' => 'sm'
+                            1 => (object) array(
+                                'type' => 'spacer',
+                                'size' => 'sm'
+                            )
+                        )
                     )
                 )
             );
 
-            array_push($contents, $content);
+            array_push($contents, $x);
         }
+
+        $content = (object) array(
+            'type' => 'carousel',
+            'contents' => $contents
+        );
 
         $template = new RawMessageBuilder([
             'type'     => 'flex',
             'altText'  => 'Main Menu',
-            'contents' => $contents
+            'contents' => $content
         ]);
 
         return $template;

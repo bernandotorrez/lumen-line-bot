@@ -111,18 +111,18 @@ class WebhookController extends Controller
      
             // create welcome message
             $message  = "Hi, " . $profile['displayName'] . "!\n";
-            $message .= "Perkenalkan namaku Poru!, disini aku akan membantu kamu seputar : Dealer, Model Mobil, dan Type Model Mobil Porsche!";
+            $message .= "Perkenalkan namaku Poru!, Disini aku akan membantu kamu seputar : Dealer, Model Mobil, dan Type Model Mobil Porsche!";
             $textMessageBuilder = new TextMessageBuilder($message);
-            $menuMessageBuilder = new TextMessageBuilder([
-                'type'     => 'flex',
-                'altText'  => 'Main Menu',
-                'contents' => json_decode(file_get_contents(base_path().'/public/mainMenuTemplate.json'))
-            ]);
+            // $menuMessageBuilder = new TextMessageBuilder([
+            //     'type'     => 'flex',
+            //     'altText'  => 'Main Menu',
+            //     'contents' => json_decode(file_get_contents(base_path().'/public/mainMenuTemplate.json'))
+            // ]);
      
             // merge all message
             $multiMessageBuilder = new MultiMessageBuilder();
             $multiMessageBuilder->add($textMessageBuilder);
-            $multiMessageBuilder->add($menuMessageBuilder);
+           // $multiMessageBuilder->add($menuMessageBuilder);
      
             // send reply message
             $this->bot->replyMessage($event['replyToken'], $multiMessageBuilder);

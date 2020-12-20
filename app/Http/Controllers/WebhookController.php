@@ -203,29 +203,15 @@ class WebhookController extends Controller
 
         $carModel = CarModel::all();
 
-        $arrayModel = [
-            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
-                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
-            ]),
-            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
-                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
-            ]),
-            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
-                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
-            ]),
-            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
-                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
-            ]),
-            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
-                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
-            ]),
-        ];
+        $string = '';
 
         foreach($carModel as $model) {
-            array_push($arrayModel, new CarouselColumnTemplateBuilder($model->nama_model, '', $model->img_url,[
+            $arrayModel .= new CarouselColumnTemplateBuilder($model->nama_model, '', $model->img_url,[
                 new UriTemplateActionBuilder('See More', $model->img_url),
-            ]));
+            ])
         }
+
+        $arrayModel = [$string];
 
         $carouselTemplateBuilder = new CarouselTemplateBuilder($arrayModel);
 

@@ -19,7 +19,6 @@ use App\Repository\Eloquent\EventLogRepository;
 use App\Repository\Eloquent\LineUserRepository;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
-use LINE\LINEBot\MessageBuilder\RawMessageBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder;
 use LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder;
@@ -124,10 +123,10 @@ class WebhookController extends Controller
             $this->dealerTemplate($event['replyToken']);
      
             // save user data
-            $this->lineUserRepository->saveUser(
-                $profile['userId'],
-                $profile['displayName']
-            );
+            // $this->lineUserRepository->saveUser(
+            //     $profile['userId'],
+            //     $profile['displayName']
+            // );
      
         }
     }
@@ -137,9 +136,7 @@ class WebhookController extends Controller
         $userMessage = strtolower($event['message']['text']);
 
         if($userMessage == 'menu') {
-            $template = file_get_contents(base_path().'/public/dealerTemplate.json');
-            $textMessageBuilder = new RawMessageBuilder(json_decode($template));
-            $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
+            $this->mainMenuTemplate($event['replyToken']);
         } else if($userMessage == 'dealer') {
             $this->dealerTemplate($event['replyToken']);
         } else if($userMessage == 'car-model') {
@@ -223,6 +220,8 @@ class WebhookController extends Controller
                 new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
             ]),
         ];
+
+        
 
         $carouselTemplateBuilder = new CarouselTemplateBuilder($arrayModel);
 

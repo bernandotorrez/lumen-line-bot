@@ -19,6 +19,7 @@ use App\Repository\Eloquent\EventLogRepository;
 use App\Repository\Eloquent\LineUserRepository;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
+use LINE\LINEBot\MessageBuilder\RawMessageBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder;
 use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder;
 use LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder;
@@ -136,7 +137,9 @@ class WebhookController extends Controller
         $userMessage = strtolower($event['message']['text']);
 
         if($userMessage == 'menu') {
-            $this->mainMenuTemplate($event['replyToken']);
+            $template = file_get_contents(base_path().'/public/dealerTemplate.json');
+            $textMessageBuilder = new RawMessageBuilder(json_decode($template));
+            $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
         } else if($userMessage == 'dealer') {
             $this->dealerTemplate($event['replyToken']);
         } else if($userMessage == 'car-model') {
@@ -203,15 +206,23 @@ class WebhookController extends Controller
 
         $carModel = CarModel::all();
 
-        $string = '';
-
-        foreach($carModel as $model) {
-            $arrayModel .= new CarouselColumnTemplateBuilder($model->nama_model, '', $model->img_url,[
-                new UriTemplateActionBuilder('See More', $model->img_url),
-            ]);
-        }
-
-        $arrayModel = [$string];
+        $arrayModel = [
+            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
+                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
+            ]),
+            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
+                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
+            ]),
+            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
+                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
+            ]),
+            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
+                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
+            ]),
+            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
+                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
+            ]),
+        ];
 
         $carouselTemplateBuilder = new CarouselTemplateBuilder($arrayModel);
 

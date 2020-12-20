@@ -31,22 +31,15 @@
     "borderColor": "#FFFFFFFF",
     "contents": [
       {
-        "type": "text",
-        "text": "Dealer",
-        "weight": "bold",
-        "color": "#FFFFFFFF",
-        "flex": 1,
-        "align": "center",
-        "gravity": "center",
-        "margin": "xs",
-        "wrap": true,
+        "type": "button",
         "action": {
           "type": "message",
           "label": "Dealer",
           "text": "dealer"
         },
-        "style": "normal",
-        "contents": []
+        "color": "#FFFFFFFF",
+        "style": "secondary",
+        "gravity": "center"
       },
       {
         "type": "separator",
@@ -54,22 +47,15 @@
         "color": "#FFFFFFFF"
       },
       {
-        "type": "text",
-        "text": "Car Model",
-        "weight": "bold",
-        "color": "#FFFFFFFF",
-        "flex": 1,
-        "align": "center",
-        "gravity": "center",
-        "margin": "xs",
-        "wrap": true,
+        "type": "button",
         "action": {
           "type": "message",
           "label": "Car Model",
           "text": "car-model"
         },
-        "style": "normal",
-        "contents": []
+        "color": "#FFFFFFFF",
+        "style": "secondary",
+        "gravity": "center"
       }
     ]
   }

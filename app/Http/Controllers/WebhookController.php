@@ -195,15 +195,13 @@ class WebhookController extends Controller
 
         $carModel = CarModel::all();
 
-        $contents = array();
-        
         foreach($carModel as $key => $model) {
-            $x = array(
-                $key => (object) array(
+            $contents[] = 
+                (object) array(
                     'type' => 'bubble',
                     'hero' => (object) array(
                         'type' => 'image',
-                        'url' => $model->nama_model,
+                        'url' => $model->img_url,
                         'size' => 'full',
                         'aspectRatio' => '20:13',
                         'aspectMode' => 'cover',
@@ -249,9 +247,8 @@ class WebhookController extends Controller
                         )
                     )
                 )
-            );
+            ;
 
-            array_push($contents, $x);
         }
 
         $content = (object) array(

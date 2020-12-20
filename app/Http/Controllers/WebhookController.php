@@ -256,56 +256,53 @@ class WebhookController extends Controller
 
         $content = (object) array(
             'type' => 'carousel',
-            'contents' => (object) array(
-                'type' => 'carousel',
-                'contents' => array(
-                    0 => (object) array(
-                        'type' => 'bubble',
-                        'hero' => (object) array(
-                            'type' => 'image',
-                            'url' => 'https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png',
-                            'size' => 'full',
-                            'aspectRatio' => '20:13',
-                            'aspectMode' => 'cover',
-                            'action' => (object) array(
-                                'type' => 'uri',
-                                'label' => 'Line',
-                                'uri' => 'https://linecorp.com/'
+            'contents' => array(
+                0 => (object) array(
+                    'type' => 'bubble',
+                    'hero' => (object) array(
+                        'type' => 'image',
+                        'url' => 'https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png',
+                        'size' => 'full',
+                        'aspectRatio' => '20:13',
+                        'aspectMode' => 'cover',
+                        'action' => (object) array(
+                            'type' => 'uri',
+                            'label' => 'Line',
+                            'uri' => 'https://linecorp.com/'
+                        )
+                    ),
+                    'body' => (object) array(
+                        'type' => 'box',
+                        'layout' => 'vertical',
+                        'contents' => array(
+                            0 => (object) array(
+                                'type' => 'text',
+                                'text' => 'Brown Cafe',
+                                'weight' => 'bold',
+                                'size' => 'xl',
+                                'contents' => array()
                             )
-                        ),
-                        'body' => (object) array(
-                            'type' => 'box',
-                            'layout' => 'vertical',
-                            'contents' => array(
-                                0 => (object) array(
-                                    'type' => 'text',
-                                    'text' => 'Brown Cafe',
-                                    'weight' => 'bold',
-                                    'size' => 'xl',
-                                    'contents' => array()
-                                )
-                            )
-                        ),
-                        'footer' => (object) array(
-                            'type' => 'box',
-                            'layout' => 'vertical',
-                            'flex' => 0,
-                            'spacing' => 'sm',
-                            'contents' => array(
-                                0 => (object) array(
-                                    'type' => 'button',
-                                    'action' => (object) array(
-                                        'type' => 'message',
-                                        'label' => 'see more',
-                                        'text' => 'see more'
-                                    ),
-                                    'height' => 'sm',
-                                    'style' => 'link',
+                        )
+                    ),
+                    'footer' => (object) array(
+                        'type' => 'box',
+                        'layout' => 'vertical',
+                        'flex' => 0,
+                        'spacing' => 'sm',
+                        'contents' => array(
+                            0 => (object) array(
+                                'type' => 'button',
+                                'action' => (object) array(
+                                    'type' => 'message',
+                                    'label' => 'see more',
+                                    'text' => 'see more'
                                 ),
-                                1 => (object) array(
-                                    'type' => 'spacer',
-                                    'size' => 'sm'
-                                )
+                                'height' => 'sm',
+                                'style' => 'link',
+                            ),
+                            1 => (object) array(
+                                'type' => 'spacer',
+                                'size' => 'sm'
                             )
                         )
                     )

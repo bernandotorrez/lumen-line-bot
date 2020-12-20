@@ -208,7 +208,7 @@ class WebhookController extends Controller
         foreach($carModel as $model) {
             $arrayModel .= new CarouselColumnTemplateBuilder($model->nama_model, '', $model->img_url,[
                 new UriTemplateActionBuilder('See More', $model->img_url),
-            ])
+            ]);
         }
 
         $arrayModel = [$string];

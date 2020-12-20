@@ -112,7 +112,8 @@ class WebhookController extends Controller
      
             // create welcome message
             $message  = "Hi, " . $profile['displayName'] . "!\n";
-            $message .= "Perkenalkan namaku Poru!, Disini aku akan membantu kamu seputar : Dealer, Model Mobil, dan Type Model Mobil Porsche!";
+            $message .= "Perkenalkan namaku Poru! \n";
+            $message .= 'Silahkan masukan keyword : \'dealer\' / \'car-model\' / \'menu\' !';
             $textMessageBuilder = new TextMessageBuilder($message);
             $menuMessageBuilder = new RawMessageBuilder([
                 'type'     => 'flex',
@@ -123,7 +124,7 @@ class WebhookController extends Controller
             // merge all message
             $multiMessageBuilder = new MultiMessageBuilder();
             $multiMessageBuilder->add($textMessageBuilder);
-           $multiMessageBuilder->add($menuMessageBuilder);
+            $multiMessageBuilder->add($menuMessageBuilder);
      
             // send reply message
             $this->bot->replyMessage($event['replyToken'], $multiMessageBuilder);
@@ -142,9 +143,9 @@ class WebhookController extends Controller
         $userMessage = strtolower($event['message']['text']);
 
         if($userMessage == 'menu') {
-            $this->mainMenuTemplate($event['replyToken']);
+            $this->bot->replyMessage($event['replyToken'], $this->mainMenuTemplate());
         } else if($userMessage == 'dealer') {
-            $this->dealerTemplate($event['replyToken']);
+            $this->bot->replyMessage($event['replyToken'], $this->dealerTemplate());
         } else if($userMessage == 'car-model') {
             $this->carModelTemplate($event['replyToken']);
         } else {
@@ -172,36 +173,26 @@ class WebhookController extends Controller
         $this->bot->replyMessage($event['replyToken'], $multiMessageBuilder);
     }
 
-    private function mainMenuTemplate($replyToken)
+    private function mainMenuTemplate()
     {
-        $template = file_get_contents(base_path().'/public/mainMenuTemplate.json');
-        $result = $this->httpClient->post(LINEBot::DEFAULT_ENDPOINT_BASE . '/v2/bot/message/reply', [
-            'replyToken' => $replyToken,
-            'messages'   => [
-                [
-                    'type'     => 'flex',
-                    'altText'  => 'Main Menu',
-                    'contents' => json_decode($template)
-                ]
-            ],
+        $template = new RawMessageBuilder([
+            'type'     => 'flex',
+            'altText'  => 'Main Menu',
+            'contents' => json_decode(file_get_contents(base_path().'/public/mainMenuTemplate.json'))
         ]);
-        return $result;
+
+        return $template;
     }
 
-    public function dealerTemplate($replyToken)
+    public function dealerTemplate()
     {
-        $template = file_get_contents(base_path().'/public/dealerTemplate.json');
-        $result = $this->httpClient->post(LINEBot::DEFAULT_ENDPOINT_BASE . '/v2/bot/message/reply', [
-            'replyToken' => $replyToken,
-            'messages'   => [
-                [
-                    'type'     => 'flex',
-                    'altText'  => 'Porsche Dealer',
-                    'contents' => json_decode($template)
-                ]
-            ],
+        $template = new RawMessageBuilder([
+            'type'     => 'flex',
+            'altText'  => 'Main Menu',
+            'contents' => json_decode(file_get_contents(base_path().'/public/dealerTemplate.json'))
         ]);
-        return $result;
+
+        return $template;
     }
 
     public function carModelTemplate($replyToken)
@@ -227,9 +218,7 @@ class WebhookController extends Controller
             ]),
         ];
 
-        $carouselTemplateBuilder = new CarouselTemplateBuilder($arrayModel);
-
-        $textMessageBuilder = new TemplateMessageBuilder('Car-Model', $carouselTemplateBuilder);
+        $textMessageBuilder = new TemplateMessageBuilder('Car-Model', $arrayModel);
 
         return $this->bot->replyMessage($replyToken, $textMessageBuilder);
     }

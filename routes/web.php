@@ -23,6 +23,12 @@ $router->get('/key', function() {
     return \Illuminate\Support\Str::random(32);
 });
 
+$router->get('/car-model/array', function() {
+    $contents = json_decode(file_get_contents(base_path().'/public/carModelTemplate.json'));
+
+    echo json_encode($contents);
+});
+
 $router->get('/car-model', function() {
     $carModel = CarModel::all();
 

@@ -110,11 +110,7 @@ class WebhookController extends Controller
             $message .= "Perkenalkan namaku Poru! \n";
             $message .= 'Silahkan masukan keyword : \'dealer\' / \'car-model\' / \'menu\' !';
             $textMessageBuilder = new TextMessageBuilder($message);
-            $menuMessageBuilder = new RawMessageBuilder([
-                'type'     => 'flex',
-                'altText'  => 'Main Menu',
-                'contents' => json_decode(file_get_contents(base_path().'/public/mainMenuTemplate.json'))
-            ]);
+            $menuMessageBuilder = $this->mainMenuTemplate();
      
             // merge all message
             $multiMessageBuilder = new MultiMessageBuilder();
@@ -144,9 +140,14 @@ class WebhookController extends Controller
         } else if($userMessage == 'car-model') {
             $this->bot->replyMessage($event['replyToken'], $this->carModelTemplate());
         } else {
-            $message = 'no keyword found';
+            $message = "Duh, maaf banget nih, Poru ga bisa ngenalin Keyword nya \n";
             $textMessageBuilder = new TextMessageBuilder($message);
-            $this->bot->replyMessage($event['replyToken'], $textMessageBuilder);
+            $menuMessageBuilder = $this->mainMenuTemplate();
+     
+            $multiMessageBuilder = new MultiMessageBuilder();
+            $multiMessageBuilder->add($textMessageBuilder);
+            $multiMessageBuilder->add($menuMessageBuilder);
+            $this->bot->replyMessage($event['replyToken'], $multiMessageBuilder);
         }
     }
 

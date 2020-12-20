@@ -17,12 +17,7 @@ use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
 use LINE\LINEBot\TemplateActionBuilder\MessageTemplateActionBuilder;
 use App\Repository\Eloquent\EventLogRepository;
 use App\Repository\Eloquent\LineUserRepository;
-use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Storage;
 use LINE\LINEBot\MessageBuilder\RawMessageBuilder;
-use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselColumnTemplateBuilder;
-use LINE\LINEBot\MessageBuilder\TemplateBuilder\CarouselTemplateBuilder;
-use LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder;
 
 class WebhookController extends Controller
 {
@@ -147,7 +142,7 @@ class WebhookController extends Controller
         } else if($userMessage == 'dealer') {
             $this->bot->replyMessage($event['replyToken'], $this->dealerTemplate());
         } else if($userMessage == 'car-model') {
-            $this->carModelTemplate($event['replyToken']);
+            $this->bot->replyMessage($event['replyToken'], $this->carModelTemplate());
         } else {
             $message = 'no keyword found';
             $textMessageBuilder = new TextMessageBuilder($message);
@@ -195,31 +190,72 @@ class WebhookController extends Controller
         return $template;
     }
 
-    public function carModelTemplate($replyToken)
+    public function carModelTemplate()
     {
 
         $carModel = CarModel::all();
 
-        $arrayModel = [
-            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
-                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
-            ]),
-            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
-                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
-            ]),
-            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
-                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
-            ]),
-            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
-                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
-            ]),
-            new CarouselColumnTemplateBuilder('911', 'text', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU',[
-                new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
-            ]),
-        ];
+        $contents = array();
 
-        $textMessageBuilder = new TemplateMessageBuilder('Car-Model', $arrayModel);
+        foreach($carModel as $model) {
+            $content = array(
+                'type' => 'bubble',
+                'hero' => array(
+                    'type' => 'image',
+                    'url' => $model->img_url,
+                    'size' => 'full',
+                    'aspectRatio' => '20:13',
+                    'aspectMode' => 'cover',
+                    'action' => array(
+                        'type' => 'uri',
+                        'label' => $model->nama_model,
+                        'uri' => $model->nama_model
+                    )
+                ),
+                'body' => array(
+                    'type' => 'box',
+                    'layout' => 'vertical',
+                    'content' => array(
+                        0 => array(
+                            'type' => 'text',
+                            'text' => $model->nama_model,
+                            'weight' => 'bold',
+                            'size' => 'xl',
+                            'content' => [],
+                        )
+                    )
+                ),
+                'footer' => array(
+                    'type' => 'box',
+                    'layout' => 'vertical',
+                    'flex' => 0,
+                    'spacing' => 'sm',
+                    'content' => array(
+                        0 => array(
+                            'type' => 'button',
+                            'action' => array(
+                                'type' => 'message',
+                                'label' => 'See Type Model',
+                                'text' => $model->nama_model
+                            ),
+                            'height' => 'sm',
+                            'style' => 'link'
+                        ),
+                        'type' => 'spacer',
+                        'size' => 'sm'
+                    )
+                )
+            );
 
-        return $this->bot->replyMessage($replyToken, $textMessageBuilder);
+            array_push($contents, $content);
+        }
+
+        $template = new RawMessageBuilder([
+            'type'     => 'carousel',
+            'altText'  => 'Main Menu',
+            'contents' => $contents
+        ]);
+
+        return $template;
     }
 }

@@ -141,6 +141,7 @@ class WebhookController extends Controller
             $this->bot->replyMessage($event['replyToken'], $this->carModelTemplate());
         } else {
             $message = "Duh, maaf banget nih, Poru ga bisa ngenalin Keyword nya \n";
+            $message .= "Mungkin kamu bisa coba pilih Keyword nya di bawah ini : ";
             $textMessageBuilder = new TextMessageBuilder($message);
             $menuMessageBuilder = $this->mainMenuTemplate();
      

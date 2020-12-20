@@ -253,7 +253,7 @@ class WebhookController extends Controller
         $template = new RawMessageBuilder([
             'type'     => 'carousel',
             'altText'  => 'Main Menu',
-            'contents' => $contents
+            'contents' => json_decode(file_get_contents(base_path().'/public/carModelTemplate.json'))
         ]);
 
         return $template;

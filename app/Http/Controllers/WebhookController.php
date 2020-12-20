@@ -108,7 +108,7 @@ class WebhookController extends Controller
             // create welcome message
             $message  = "Hi, " . $profile['displayName'] . "!\n";
             $message .= "Perkenalkan namaku Poru! \n";
-            $message .= 'Silahkan masukan keyword : \'dealer\' / \'car-model\' / \'menu\' !';
+            $message .= 'Silahkan klik Menu yang Poru kasih dibawah ya biar Poru bisa bantu kamu!';
             $textMessageBuilder = new TextMessageBuilder($message);
             $menuMessageBuilder = $this->mainMenuTemplate();
      

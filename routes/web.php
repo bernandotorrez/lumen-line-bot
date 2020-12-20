@@ -26,7 +26,7 @@ $router->get('/key', function() {
 $router->get('/car-model/array', function() {
     $contents = json_decode(file_get_contents(base_path().'/public/carModelTemplate.json'));
 
-    echo json_decode($contents);
+    echo '<pre>';print_r($contents);
 });
 
 $router->get('/car-model', function() {

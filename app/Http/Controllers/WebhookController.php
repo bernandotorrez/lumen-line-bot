@@ -79,7 +79,8 @@ class WebhookController extends Controller
                 $this->user = $this->lineUserRepository->getUser($event['source']['userId']);
      
                 // if user not registered
-                if(!$this->user) $this->followCallback($event);
+                // if(!this->user)
+                if(true) $this->followCallback($event);
                 else {
                     // respond event
                     if($event['type'] == 'message'){
@@ -112,21 +113,25 @@ class WebhookController extends Controller
             $message  = "Hi, " . $profile['displayName'] . "!\n";
             $message .= "Perkenalkan namaku Poru!, disini aku akan membantu kamu seputar : Dealer, Model Mobil, dan Type Model Mobil Porsche!";
             $textMessageBuilder = new TextMessageBuilder($message);
+            $menuMessageBuilder = new TextMessageBuilder([
+                'type'     => 'flex',
+                'altText'  => 'Main Menu',
+                'contents' => json_decode(file_get_contents(base_path().'/public/mainMenuTemplate.json'))
+            ]);
      
             // merge all message
             $multiMessageBuilder = new MultiMessageBuilder();
             $multiMessageBuilder->add($textMessageBuilder);
+            $multiMessageBuilder->add($menuMessageBuilder);
      
             // send reply message
             $this->bot->replyMessage($event['replyToken'], $multiMessageBuilder);
-            $this->mainMenuTemplate($event['replyToken']);
-            $this->dealerTemplate($event['replyToken']);
      
             // save user data
-            // $this->lineUserRepository->saveUser(
-            //     $profile['userId'],
-            //     $profile['displayName']
-            // );
+            $this->lineUserRepository->saveUser(
+                $profile['userId'],
+                $profile['displayName']
+            );
      
         }
     }
@@ -220,8 +225,6 @@ class WebhookController extends Controller
                 new UriTemplateActionBuilder('See More', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScZznW_6VVq59SJrAoFbFnlZ0x3tQT7k2JIQ&usqp=CAU'),
             ]),
         ];
-
-        
 
         $carouselTemplateBuilder = new CarouselTemplateBuilder($arrayModel);
 
